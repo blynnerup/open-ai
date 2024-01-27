@@ -2,6 +2,7 @@ import tkinter
 import customtkinter
 from tkinter.filedialog import askopenfilename
 from tkinter import filedialog
+import whisper
 
 
 # Functions
@@ -28,7 +29,8 @@ def shouldEnableTranscribeButton():
     folder = transcription_file_path.get()
     if path and folder:
         print("true")
-        transcribe_button['state'] = "normal"
+        # transcribe_button['state'] = "normal"
+        transcribe_button.configure(state="normal")
         transcribe_button.configure(text_color="white")
     else:
         print("false")
@@ -38,6 +40,10 @@ def shouldEnableTranscribeButton():
 def transcribeFile():
     print('click')
     # Do Whisper
+    model = whisper.load_model("base")
+    result = model.transcribe(audio_file_path.get())
+
+    print(result["text"])
 
 # Systems settings
 customtkinter.set_appearance_mode("System")
@@ -76,8 +82,15 @@ select_folder_btn =  customtkinter.CTkButton(app, text="Select folder", command=
 select_folder_btn.pack(padx=10, pady=10, side="top", anchor="nw")
 
 # Transcribe button
-transcribe_button = customtkinter.CTkButton(app, text="Transcribe", command=transcribeFile, state="normal")
+transcribe_button = customtkinter.CTkButton(app, text="Transcribe", command=transcribeFile, state="disabled")
 transcribe_button.pack(padx=10, pady=10, side="top", anchor="nw")
+
+# Textbox
+textbox = customtkinter.CTkTextbox(app, width=350, height=35)
+textbox.insert("0.0", "new text to insert")  # insert at line 0 character 0
+text = textbox.get("0.0", "end")  # get text from line 0 character 0 till the end
+textbox.configure(state="disabled")  # configure textbox to be read-only
+textbox.pack(padx=10, pady=10, side="top", anchor="nw")
 
 # Run app
 app.mainloop()
