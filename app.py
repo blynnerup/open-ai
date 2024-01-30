@@ -48,13 +48,13 @@ def shouldEnableTranscribeButton():
 def transcribeFile():
     updateProgramOutput("Transcribing")
     # Do Whisper
-    # model = whisper.load_model("base")
-    # result = model.transcribe(audio_file_path.get(), language="da")
+    model = whisper.load_model("base")
+    result = model.transcribe(audio_file_path.get(), language="sv")
     
-    # with open(transcription_file_path.get() + output_file_name.get(), "w", encoding="utf-8") as file:
-    #     file.write(result["text"])
-    #     file.close()
-    # print(result["text"])
+    with open(transcription_file_path.get() + output_file_name.get(), "w", encoding="utf-8") as file:
+        file.write(result["text"])
+        file.close()
+    print(result["text"])
 
     updateProgramOutput("Done")
     generate_corrected_transcript()
@@ -68,13 +68,15 @@ def updateProgramOutput(updateMessage):
 def generate_corrected_transcript():
     # print(transcription_file_path.get() + output_file_name.get())
     updateProgramOutput("Preparing to correct file contents")
-    with open("Hobbitten_dk_text2.txt", encoding="utf-8") as f: text_file_content = f.read()
-    system_prompt = "You are correcting a transcript of an audio file, where a person have read the first passages of tdhe book The Hobbit in danish. Your task is to correct the transcribed text so that the text are in line with the text in The Hobbit, still in danish."
+    with open(transcription_file_path.get() + output_file_name.get(), encoding="utf-8") as f: text_file_content = f.read()
+    #system_prompt = "You are correcting a transcript of an audio file, where a person have read the first passages of tdhe book The Hobbit in danish. Your task is to correct the transcribed text so that the text are in line with the text in The Hobbit, still in danish."
     # user_message = "Can you correct the text to be more correct?" + text_file_content
-    user_message = "What book is the text from?"
+    #user_message = "What book is the text from?"
     #system_prompt = "Can you give an outline of events of the Battle of Jutland during ww1?"
     # system_prompt = "Can you give an outline of events of the Battle of Jutland during ww1?"
     # user_message = "What happened during the Battle of Jutland in World War I?"
+    system_prompt = "You are an assistant to a dentist. The dentist have made a voice recording and transcribed the voice recording to a text file using Whisper. The language is Swedish. Your task is to correct the text so that errors transcribed due to the techincal language of a dentist is fixed."
+    user_message = "Can you correct the text so that no transcribed errors occur?" + text_file_content
     corrected_transcript = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -84,6 +86,11 @@ def generate_corrected_transcript():
     )
     updateProgramOutput("File has been corrected.")
     content = corrected_transcript.choices[0].message.content
+    with open(transcription_file_path.get() + "corrected_" + output_file_name.get(), "w", encoding="utf-8") as file:
+        file.write(corrected_transcript.choices[0].message.content)
+        file.close()
+
+    updateProgramOutput("The text has been corrected.")
     print(corrected_transcript.choices[0].message.content)
     
 
