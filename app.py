@@ -72,7 +72,6 @@ def generate_corrected_transcript():
     #system_prompt = "You are correcting a transcript of an audio file, where a person have read the first passages of tdhe book The Hobbit in danish. Your task is to correct the transcribed text so that the text are in line with the text in The Hobbit, still in danish."
     # user_message = "Can you correct the text to be more correct?" + text_file_content
     #user_message = "What book is the text from?"
-    #system_prompt = "Can you give an outline of events of the Battle of Jutland during ww1?"
     # system_prompt = "Can you give an outline of events of the Battle of Jutland during ww1?"
     # user_message = "What happened during the Battle of Jutland in World War I?"
     system_prompt = "You are an assistant to a dentist. The dentist have made a voice recording and transcribed the voice recording to a text file using Whisper. The language is Swedish. Your task is to correct the text so that errors transcribed due to the techincal language of a dentist is fixed."
